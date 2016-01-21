@@ -1,0 +1,28 @@
+---
+- hosts: localhost
+  tasks:
+    - name: install git
+      yum: name=git  state=latest
+      become: yes
+      become_method: sudo
+    - name : clone git repository 
+      git: repo=https://github.com/idlevy/spring-petclinic.git dest=/home/ec2-user/course update=no  
+        
+    - name: clone course files
+      git: repo=https://github.com/idlevy/course_rep.git dest=/home/ec2-user/course update=no 
+        
+    - name: get Maven zip file
+      get_url: url=http://apache.spd.co.il/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz dest=/home/ec2-user/course
+        
+    - name: untar maven
+      unarchive: src=/home/ec2-user/course/apache-maven-3.3.9-bin.tar.gz  dest=/home/ec2-user/course/maven
+    - name: updating env paramater M2=HOME
+      lineinfile: dest=/home/ec2-user/.bash_profile line="M2_HOME" 
+    - name: updating env paramater 2nd var
+      lineinfile: dest=/home/ec2-user/.bash_profile line="M2=$M2_HOME/bin"
+    - name: updating env paramater 3nd var
+      lineinfile: dest=/home/ec2-user/.bash_profile line="PATH=$PATH:$M2"
+  
+   
+ 
+
